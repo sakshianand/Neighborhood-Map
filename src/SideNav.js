@@ -1,22 +1,22 @@
+
 import React, { Component } from 'react';
 
 class SideNav extends Component {
-	state={
-		markers:[]
-	}
-	componentDidMount() {
-        this.setState({markers: this.props.places});
-    }
-	render = ()=>{
+
+	render= ()=>{
 		return (
-			<ul>
-			{this.state.markers.map(mark=>{
-				<li>{mark.title}</li>
-			})}
+			<ul id="list-items">
+			{
+				this.props.places.map((mark,index)=>{
+				return(<li key={index} onClick={this.props.openInfoWindow}>{mark.title}</li>)
+
+			})
+
+		}
 			
 			</ul>
 		);
 
 }
 }
-export default SideNav;
+export default SideNav

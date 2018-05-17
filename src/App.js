@@ -31,7 +31,8 @@ class App extends Component {
           }
         ],
         map:'',
-        markers:[]      
+        markers:[],
+        infowindow:''      
       }
 
   //Loding Map Reference take from http://www.klaasnotfound.com/2016/11/06/making-google-maps-work-with-react/
@@ -42,6 +43,7 @@ class App extends Component {
         // Asynchronously load the Google Maps script, passing in the callback reference
         loadMapJS('https://maps.googleapis.com/maps/api/js?key=AIzaSyCPi0o_tjNjKYYDe_6nYg82r0leI7kKlOE&callback=initMap')
     }
+    //Initializtion of Map
    initMap=()=> {
     //Constructor creates a new map - only center and zoom are required
       var map = new google.maps.Map(document.getElementById('map'),{
@@ -51,7 +53,7 @@ class App extends Component {
       this.setState({
         map:map
       })
-     
+     //Setting the bounds of the Map(It will autozoom and pan itself depending on screen size)
      var bounds  = new google.maps.LatLngBounds();
      var mark=[];
       this.state.places.forEach(loc=>{
@@ -62,8 +64,8 @@ class App extends Component {
           animation:window.google.maps.Animation.DROP
         }) 
          mark.push(marker);
-         var loc = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
-         bounds.extend(loc);
+         var loca = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
+         bounds.extend(loca);
         google.maps.event.addListener(marker,'click',()=> {
          openInfoWindow(marker);
         })
@@ -72,7 +74,7 @@ class App extends Component {
       this.setState({
         markers:mark
       })
-      console.log(this.state.markers)
+      
        //Get current center
       var c = map.getCenter();
       //Use event listener for resize on window
@@ -86,6 +88,9 @@ class App extends Component {
       var infowindow = new google.maps.InfoWindow({
         
     });
+      this.setState({
+        infowindow:infowindow
+      })
       var openInfoWindow=(marker)=>{
          marker.setAnimation(window.google.maps.Animation.BOUNCE);
         setTimeout(function() {
@@ -98,19 +103,19 @@ class App extends Component {
          var lat = marker.getPosition().lat();
          var lng = marker.getPosition().lng();
          var url = "https://api.foursquare.com/v2/venues/search?client_id="+clientId+"&client_secret="+clientSecret+"&v=20180516&ll="+lat+","+lng+"";
-         var id;
-         infowindow.setContent("Loading Data..")
+         
+         this.state.infowindow.setContent("Loading Data..")
          fetch(url)
           .then((res)=>{
             if(res.status !==200)
             {
-              infowindow.setContent('Error in fetching data');
+              this.state.infowindow.setContent('Error in fetching data');
               return;
             }
             res.json()
             .then((data)=>{
               var json=data.response.venues[0];
-              id=json.id;
+              
 
               fetch("https://api.foursquare.com/v2/venues/"+json.id+"/?client_id="+clientId+"&client_secret="+clientSecret+"&v=20180516")
                 .then((resp)=>{
@@ -118,7 +123,7 @@ class App extends Component {
                     .then(data=>{
                       var d = data.response.venue;
                       console.log(d);
-                      infowindow.setContent("According to the details on Foursquare Website : <br>Number of Tips : "+d.tips.count+"<br>"+"Number of Likes by the User : "+d.likes.count+" Likes")
+                      this.state.infowindow.setContent(`According to the details on Foursquare Website : <br>Number of Tips : ${d.tips.count}<br>Number of Likes by the User : ${d.likes.count} Likes`)
 
                     })
                 })
@@ -126,7 +131,7 @@ class App extends Component {
             })
           })
 
-         infowindow.open(map,marker);
+         this.state.infowindow.open(map,marker);
       }
     }
   render=()=> {
@@ -134,7 +139,7 @@ class App extends Component {
 
       <div id="container">
       <nav>
-        <SideNav places={this.state.markers} />  
+        <SideNav places={this.state.markers} openInfoWindow={this.openInfoWindow} />  
       </nav>
 
         <div id="map-container" role="application" tabIndex="-1">

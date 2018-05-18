@@ -136,11 +136,27 @@ class App extends Component {
 
          this.state.infowindow.open(this.state.map,marker);
       }
+        filter = (event)=>{
+          var filterLocations=[];
+    this.state.markers.forEach((marker)=>{
+      if(marker.title.toLowerCase().indexOf(event.target.value)>=0) {
+        marker.setVisible(true);
+        filterLocations.push(marker);
+      }
+      else
+      {
+        marker.setVisible(false);
+      }
+    });
+    this.setState({
+      markers:filterLocations
+    })
+  }
   render=()=> {
     return (
 
       <div id="container">
-        <SideNav places={this.state.markers} openInfoWindow={this.openInfoWindow} />  
+        <SideNav places={this.state.markers} openInfoWindow={this.openInfoWindow} filter={this.filter} />  
         <div id="map-container" role="application" tabIndex="-1">
           <div id="map" style={{ 
                           height: window.innerHeight + "px",

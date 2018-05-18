@@ -1,1 +1,18 @@
-
+#nav
+{
+	float: left;
+	padding: 10px;
+}
+#list-items {
+	list-style-type: none;
+	padding: 20px;
+}
+#filter {
+	margin-left: 20px;
+	padding: 10px;
+}
+ .elem
+ {
+ 	padding: 10px;
+ 	cursor: pointer;
+ }

@@ -67,7 +67,7 @@ class App extends Component {
          var loca = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
          bounds.extend(loca);
         google.maps.event.addListener(marker,'click',()=> {
-         openInfoWindow(marker);
+         this.openInfoWindow(marker);
         })
     })
      //console.log(mark);
@@ -91,7 +91,10 @@ class App extends Component {
       this.setState({
         infowindow:infowindow
       })
-      var openInfoWindow=(marker)=>{
+
+
+    }
+       openInfoWindow=(marker)=>{
          marker.setAnimation(window.google.maps.Animation.BOUNCE);
         setTimeout(function() {
           marker.setAnimation(null);
@@ -131,17 +134,13 @@ class App extends Component {
             })
           })
 
-         this.state.infowindow.open(map,marker);
+         this.state.infowindow.open(this.state.map,marker);
       }
-    }
   render=()=> {
     return (
 
       <div id="container">
-      <nav>
         <SideNav places={this.state.markers} openInfoWindow={this.openInfoWindow} />  
-      </nav>
-
         <div id="map-container" role="application" tabIndex="-1">
           <div id="map" style={{ 
                           height: window.innerHeight + "px",

@@ -32,6 +32,7 @@ class App extends Component {
         ],
         map:'',
         markers:[],
+        defaultMarkers:[],
         infowindow:''      
       }
 
@@ -64,6 +65,7 @@ class App extends Component {
           animation:window.google.maps.Animation.DROP
         }) 
          mark.push(marker);
+
          var loca = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
          bounds.extend(loca);
         google.maps.event.addListener(marker,'click',()=> {
@@ -72,7 +74,8 @@ class App extends Component {
     })
      //console.log(mark);
       this.setState({
-        markers:mark
+        markers:mark,
+        defaultMarkers:mark
       })
       
        //Get current center
@@ -138,16 +141,32 @@ class App extends Component {
       }
         filter = (event)=>{
           var filterLocations=[];
-    this.state.markers.forEach((marker)=>{
-      if(marker.title.toLowerCase().indexOf(event.target.value)>=0) {
-        marker.setVisible(true);
-        filterLocations.push(marker);
-      }
-      else
-      {
-        marker.setVisible(false);
-      }
-    });
+          if(event.target.value==='' || filterLocations.length===0)
+    {
+      this.state.defaultMarkers.forEach((marker)=>{
+          if(marker.title.toLowerCase().indexOf(event.target.value.toLowerCase())>=0) {
+            marker.setVisible(true);
+            filterLocations.push(marker);
+          }
+          else
+          {
+            marker.setVisible(false);
+          }
+        });
+    }
+    else
+    {
+            this.state.markers.forEach((marker)=>{
+          if(marker.title.toLowerCase().indexOf(event.target.value)>=0) {
+            marker.setVisible(true);
+            filterLocations.push(marker);
+          }
+          else
+          {
+            marker.setVisible(false);
+          }
+        });
+    }
     this.setState({
       markers:filterLocations
     })

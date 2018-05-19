@@ -33,7 +33,8 @@ class App extends Component {
         map:'',
         markers:[],
         defaultMarkers:[],
-        infowindow:''      
+        infowindow:'',
+        isOpen:true      
       }
 
   //Loding Map Reference take from http://www.klaasnotfound.com/2016/11/06/making-google-maps-work-with-react/
@@ -86,6 +87,7 @@ class App extends Component {
          this.state.map.setCenter(c);
          this.state.map.fitBounds(bounds);       
         this.state.map.panToBounds(bounds);
+        
       });
      
       var infowindow = new google.maps.InfoWindow({
@@ -140,6 +142,7 @@ class App extends Component {
          this.state.infowindow.open(this.state.map,marker);
       }
         filter = (event)=>{
+          this.state.infowindow.close();
           var filterLocations=[];
           if(event.target.value==='' || filterLocations.length===0)
     {
@@ -171,15 +174,26 @@ class App extends Component {
       markers:filterLocations
     })
   }
+  toggleNav = ()=>{
+
+    document.getElementById('nav').classList.toggle('close')
+    if(document.getElementById('nav').className==='close')
+    {
+      this.setState({
+        isOpen:false
+      })
+    }
+    this.state.infowindow.close();
+  }
   render=()=> {
     return (
 
-      <div id="container">
-        <SideNav places={this.state.markers} openInfoWindow={this.openInfoWindow} filter={this.filter} />  
+      <div id="container" role="main">
+      <span id="toggle-nav" onClick={this.toggleNav} aria-label="toggle Navigation">&#9776;</span>
+        <SideNav places={this.state.markers} openInfoWindow={this.openInfoWindow} filter={this.filter} isOpen={this.props.isOpen} />  
         <div id="map-container" role="application" tabIndex="-1">
           <div id="map" style={{ 
-                          height: window.innerHeight + "px",
-                         
+                          height: window.innerHeight + "px"
                            }}>
           </div>
         </div>

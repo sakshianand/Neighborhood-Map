@@ -16,3 +16,18 @@
  	padding: 10px;
  	cursor: pointer;
  }
+
+#toggle-nav {
+	font-size: 30px;
+    cursor: pointer;
+    fill: #4e595d;
+    position: absolute;
+    right: 30px;
+    top: 5px;
+    width: 40px;
+    z-index: 5;
+}
+.close {
+	margin-left: -20px;
+	width: 0;
+}

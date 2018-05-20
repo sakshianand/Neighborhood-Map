@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import SideNav from './SideNav';
 class App extends Component {
+  //Setting up of states
       state={
         places:[
           {
@@ -99,6 +100,7 @@ class App extends Component {
 
 
     }
+    //This function opens the infowindow when marker is clicked
        openInfoWindow=(marker)=>{
          marker.setAnimation(window.google.maps.Animation.BOUNCE);
         setTimeout(function() {
@@ -141,6 +143,7 @@ class App extends Component {
 
          this.state.infowindow.open(this.state.map,marker);
       }
+      //This function is used to filter when the text in txtbox is changed
         filter = (event)=>{
           this.state.infowindow.close();
           var filterLocations=[];
@@ -174,6 +177,7 @@ class App extends Component {
       markers:filterLocations
     })
   }
+  //This function is used to toggle navigation when hamburger icon is clicked
   toggleNav = ()=>{
 
     document.getElementById('nav').classList.toggle('close')
